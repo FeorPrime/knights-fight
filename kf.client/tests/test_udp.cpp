@@ -12,7 +12,7 @@ void test_packet_json_serialization() {
         .timestamp = 1731000000000,
         .challengerName = "SirLancelot",
         .otpCode = "123456",
-        .commandText = "move up"
+        .commandText = "hit_off"
     };
 
     std::string jsonStr = packet.toJson();
@@ -25,7 +25,7 @@ void test_packet_json_serialization() {
     assert(parsed->timestamp == 1731000000000);
     assert(parsed->challengerName == "SirLancelot");
     assert(parsed->otpCode == "123456");
-    assert(parsed->commandText == "move up");
+    assert(parsed->commandText == "hit_off");
 
     std::cout << "[✓] UDP packet JSON serialization test passed.\n";
 }
@@ -58,29 +58,33 @@ void test_packet_creation_with_direct_otp_code() {
     auto packetResult = services::UdpCommandService::createPacket(
         "Arthur",
         "654321",
-        "use hand_left",
+        "hit_main",
         1,
         123456789
     );
 
     assert(packetResult.has_value());
     assert(packetResult->otpCode == "654321");
-    assert(packetResult->commandText == "use hand_left");
+    assert(packetResult->commandText == "hit_main");
 
     std::cout << "[✓] UDP packet creation with direct OTP code test passed.\n";
 }
 
 void test_standard_game_commands() {
-    assert(services::UdpCommandService::isStandardGameCommand("move up"));
-    assert(services::UdpCommandService::isStandardGameCommand("move down"));
-    assert(services::UdpCommandService::isStandardGameCommand("move left"));
-    assert(services::UdpCommandService::isStandardGameCommand("move right"));
-    assert(services::UdpCommandService::isStandardGameCommand("MOVE UP"));
+    assert(services::UdpCommandService::isStandardGameCommand("move"));
+    assert(services::UdpCommandService::isStandardGameCommand("MOVE"));
+    assert(services::UdpCommandService::isStandardGameCommand(" hit_main "));
+    assert(services::UdpCommandService::isStandardGameCommand("HIT_OFF"));
     assert(services::UdpCommandService::isStandardGameCommand("turn left"));
-    assert(services::UdpCommandService::isStandardGameCommand("turn right"));
-    assert(services::UdpCommandService::isStandardGameCommand("use hand_left"));
-    assert(services::UdpCommandService::isStandardGameCommand("use hand_right"));
+    assert(services::UdpCommandService::isStandardGameCommand("TURN RIGHT"));
 
+    // The old grammar is not a spec verb: a bare direction or a missing side is rejected.
+    assert(!services::UdpCommandService::isStandardGameCommand("move up"));
+    assert(!services::UdpCommandService::isStandardGameCommand("use hand_left"));
+    assert(!services::UdpCommandService::isStandardGameCommand("hit_left"));
+    assert(!services::UdpCommandService::isStandardGameCommand("hit main"));
+    assert(!services::UdpCommandService::isStandardGameCommand("turn around"));
+    assert(!services::UdpCommandService::isStandardGameCommand("turnleft"));
     assert(!services::UdpCommandService::isStandardGameCommand("jump up"));
     assert(!services::UdpCommandService::isStandardGameCommand("attack"));
     assert(!services::UdpCommandService::isStandardGameCommand(""));

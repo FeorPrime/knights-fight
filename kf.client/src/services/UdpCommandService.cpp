@@ -107,13 +107,13 @@ namespace services {
     }
 
     bool UdpCommandService::isStandardGameCommand(std::string_view commandText) {
-        static const std::regex movePattern(R"(^\s*move\s+(up|down|left|right)\s*$)", std::regex::icase);
-        static const std::regex handPattern(R"(^\s*use\s+hand_(left|right)\s*$)", std::regex::icase);
+        static const std::regex movePattern(R"(^\s*move\s*$)", std::regex::icase);
+        static const std::regex hitPattern(R"(^\s*hit_(main|off)\s*$)", std::regex::icase);
         static const std::regex turnPattern(R"(^\s*turn\s+(left|right)\s*$)", std::regex::icase);
 
         std::string text(commandText);
         return std::regex_match(text, movePattern) ||
-               std::regex_match(text, handPattern) ||
+               std::regex_match(text, hitPattern) ||
                std::regex_match(text, turnPattern);
     }
 

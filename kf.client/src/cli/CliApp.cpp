@@ -35,9 +35,9 @@ namespace cli {
         std::cerr << "  send-cmd <name> <secret|otp_seed> <command>  Send a game command UDP packet\n";
         std::cerr << "           [--host <host>] [--port <port>] [--seq <number>]\n\n";
         std::cerr << "Game commands (case-insensitive):\n";
-        std::cerr << "  move up | move down | move left | move right\n";
+        std::cerr << "  move\n";
         std::cerr << "  turn left | turn right\n";
-        std::cerr << "  use hand_left | use hand_right\n\n";
+        std::cerr << "  hit_main | hit_off\n\n";
         std::cerr << "Examples:\n";
         std::cerr << std::format("  {} create Alice s3cret\n", programName);
         std::cerr << std::format("  {} create Alice s3cret ./my-avatar.png\n", programName);
@@ -45,7 +45,7 @@ namespace cli {
         std::cerr << std::format("  {} login Alice s3cret\n", programName);
         std::cerr << std::format("  {} ready Alice s3cret true\n", programName);
         std::cerr << std::format("  {} lobby\n", programName);
-        std::cerr << std::format("  {} send-cmd Alice s3cret \"move up\"\n", programName);
+        std::cerr << std::format("  {} send-cmd Alice s3cret \"hit_main\"\n", programName);
         std::cerr << std::format("  {} send-cmd Alice JBSWY3DPEHPK3PXP \"turn right\" --port 5050\n", programName);
     }
 
@@ -447,7 +447,7 @@ namespace cli {
 
         if (positional.size() < 3) {
             std::cerr << "Error: send-cmd requires <challenger_name> <secret|otp_seed> <command>\n";
-            std::cerr << "Example: kf_client send-cmd Alice s3cret \"move up\"\n";
+            std::cerr << "Example: kf_client send-cmd Alice s3cret \"hit_main\"\n";
             return 1;
         }
 
