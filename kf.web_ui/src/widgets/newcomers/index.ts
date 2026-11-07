@@ -1,0 +1,1 @@
+export { NewcomersWidget } from './NewcomersWidget';

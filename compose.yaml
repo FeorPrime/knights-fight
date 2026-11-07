@@ -1,0 +1,43 @@
+include:
+  - compose-modules/postgress-compose.yaml
+  - compose-modules/nginx-compose.yaml
+services:
+
+  kf-api:
+    image: ${APP_IMAGE:-kf.api:latest}
+    container_name: kf_api
+    restart: unless-stopped
+    depends_on:
+      - kf-db
+    ports:
+      - "5050:5050/udp"
+    environment:
+      POSTGRES_HOST: kf-db
+      POSTGRES_PORT: 5432
+      POSTGRES_USER: ${POSTGRES_USER:-kf_user}
+      POSTGRES_PW: ${POSTGRES_PW:?PG_PASS must be set in .env}
+      POSTGRES_DB: ${POSTGRES_DB:-kf_db}
+      ConnectionStrings__DefaultConnection: Host=localhost;Database=${POSTGRES_DB:-kf_db};Username=${POSTGRES_USER:-kf_user};Password=${POSTGRES_PW:?PG_PASS must be set in .env}
+    build:
+      context: .
+      dockerfile: kf.api/Dockerfile
+    networks:
+      - backend
+      - frontend
+
+  kf-web:
+    image: ${WEB_IMAGE:-kf.web_ui:latest}
+    container_name: kf_web
+    restart: unless-stopped
+    ports:
+      - "${WEB_PORT:-8081}:80"
+    build:
+      context: kf.web_ui
+      dockerfile: Dockerfile
+    networks:
+      - frontend
+
+networks:
+  frontend:
+  backend:
+    internal: true

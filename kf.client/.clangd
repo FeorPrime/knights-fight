@@ -1,0 +1,5 @@
+CompileFlags:
+  # Force Clangd to use C++23
+  Add: [-std=c++23]
+  # Ensure it knows about your build directory includes
+  CompilationDatabase: build

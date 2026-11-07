@@ -1,0 +1,10 @@
+include:
+  - compose-modules/postgress-compose.yaml
+services:
+  kf-db:
+    ports:
+      - "127.0.0.1:5432:5432"
+
+networks:
+  frontend:
+  backend:

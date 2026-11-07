@@ -1,0 +1,24 @@
+services:
+  kf-reverse-proxy:
+    image: nginx
+    container_name: kf_reverse_proxy
+    restart: unless-stopped
+    depends_on:
+      - kf-api
+    ports:
+      - "${NGINX_HTTP_PORT:-80}:80"
+      - "${NGINX_HTTPS_PORT:-443}:443"
+    environment:
+      DOMAIN: ${DOMAIN:-localhost}
+      DEBUG: ${DEBUG:-false}
+      CERT_DAYS: ${CERT_DAYS:-3650}
+      NGINX_ENTRYPOINT_LISTEN_ON_IPV6_BY_DEFAULT: "false"
+    volumes:
+      - ./nginx/configs:/etc/nginx/configs:ro
+      - ./nginx/certs:/etc/nginx/certs
+      - ./nginx/entrypoint.sh:/docker-entrypoint.d/40-render-config.sh:ro
+    networks:
+      - frontend
+
+networks:
+  frontend:

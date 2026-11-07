@@ -1,0 +1,23 @@
+<Solution>
+  <Configurations>
+    <Platform Name="Any CPU" />
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Folder Name="/Solution Items/">
+    <File Path="../.gitignore" />
+    <File Path=".env" />
+    <File Path="compose-modules/nginx-compose.yaml" />
+    <File Path="compose-modules/nginx/configs/http-only.conf.template" />
+    <File Path="compose-modules/nginx/configs/https.conf.template" />
+    <File Path="compose-modules/nginx/entrypoint.sh" />
+    <File Path="compose-modules/postgress-compose.yaml" />
+    <File Path="compose.yaml" />
+    <File Path="dev.readme.md" />
+    <File Path="readme.md" />
+  </Folder>
+  <Project Path="kf.api.Tests\kf.api.Tests.csproj" />
+  <Project Path="kf.api\kf.api.csproj" />
+  <Project Path="kf.game.Tests\kf.game.Tests.csproj" />
+  <Project Path="kf.game\kf.game.csproj" />
+</Solution>

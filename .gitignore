@@ -1,0 +1,17 @@
+.idea/
+build/
+*build*/
+cmake-build-debug/
+.DS_Store
+data_vol
+*.env
+*.bin
+obj/
+bin/
+*.log
+*.out
+*.o
+*.user
+.junie/
+.worktrees/
+.superpowers/
