@@ -2,6 +2,7 @@ using System.Collections.Concurrent;
 using System.Net;
 using KnightFight.Api.Infrastructure.Models.Commands;
 using KnightFight.Api.Infrastructure.Services.Crypto;
+using KnightFight.Game.Management;
 
 namespace KnightFight.Api.Infrastructure.Services;
 
@@ -12,6 +13,7 @@ public class CommandProcessor : ICommandProcessor
 {
     private readonly IOtpService _otpService;
     private readonly IOtpSeedsProvider _otpSeedsProvider;
+    private readonly IGameManager _gameManager;
     private readonly ILogger<CommandProcessor> _logger;
     private readonly ConcurrentDictionary<string, DateTime> _rateLimits = new();
 
@@ -22,10 +24,12 @@ public class CommandProcessor : ICommandProcessor
     public CommandProcessor(
         IOtpService otpService,
         IOtpSeedsProvider otpSeedsProvider,
+        IGameManager gameManager,
         ILogger<CommandProcessor> logger)
     {
         _otpService = otpService;
         _otpSeedsProvider = otpSeedsProvider;
+        _gameManager = gameManager;
         _logger = logger;
     }
 
@@ -58,9 +62,26 @@ public class CommandProcessor : ICommandProcessor
         // Console output as requested
         Console.WriteLine("[COMMAND] {0}: {1}", command.ChallengerName, command.ToStringCommand());
 
-        // TODO: Here you would actually execute the command in game logic
-        // For now, just return success
-        return CommandResult.SuccessResult(string.Format("Command '{0}' processed", command.ToStringCommand()));
+        // readme: "The match must already be started" — the challenger name is the engine's
+        // fighter id, so it is the only handle a UDP packet carries.
+        var game = _gameManager.GetGameByChallenger(command.ChallengerName);
+        if (game is null)
+        {
+            _logger.LogDebug("No live match for challenger {ChallengerName}", command.ChallengerName);
+            return CommandResult.FailureResult("No live match for challenger");
+        }
+
+        // readme: only 3 received packets enter the queue, the rest are discarded.
+        if (!_gameManager.EnqueueAction(game.Id, command.ChallengerName, command.ToGameAction()))
+        {
+            _logger.LogDebug(
+                "Action rejected for challenger {ChallengerName} in match {GameId}",
+                command.ChallengerName,
+                game.Id);
+            return CommandResult.FailureResult("Action rejected: queue full or match finished");
+        }
+
+        return CommandResult.SuccessResult(string.Format("Command '{0}' queued", command.ToStringCommand()));
     }
 
     public async Task<bool> ValidateAuthenticationAsync(string challengerName, string otpCode)

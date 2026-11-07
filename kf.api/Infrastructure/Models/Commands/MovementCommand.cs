@@ -1,30 +1,22 @@
+using KnightFight.Game.Actions;
+
 namespace KnightFight.Api.Infrastructure.Models.Commands;
 
 /// <summary>
-/// Represents a movement command in the game
+/// Represents a movement command in the game (readme spec: move — move forward)
 /// </summary>
 public sealed record MovementCommand(
     string ChallengerName,
-    string OtpCode,
-    MovementDirection Direction
+    string OtpCode
 ) : GameCommandBase(Normalize(ChallengerName), Normalize(OtpCode))
 {
     public override CommandCategory Category => CommandCategory.Movement;
 
-    public override string ToStringCommand() => $"move {Direction.ToString().ToLower()}";
+    public override string ToStringCommand() => "move";
 
     public override bool Validate() =>
         !string.IsNullOrWhiteSpace(ChallengerName) &&
-        !string.IsNullOrWhiteSpace(OtpCode) &&
-        Direction is >= MovementDirection.Up and <= MovementDirection.Right;
+        !string.IsNullOrWhiteSpace(OtpCode);
 
-    // Game-dev: Allow creation from string for parsing
-    public static MovementCommand? FromString(string direction, string challengerName, string otpCode)
-    {
-        if (Enum.TryParse<MovementDirection>(direction, true, out var dir))
-        {
-            return new MovementCommand(challengerName, otpCode, dir);
-        }
-        return null;
-    }
+    public override GameAction ToGameAction() => GameAction.Move;
 }

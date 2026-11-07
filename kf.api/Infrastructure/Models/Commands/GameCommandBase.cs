@@ -1,3 +1,5 @@
+using KnightFight.Game.Actions;
+
 namespace KnightFight.Api.Infrastructure.Models.Commands;
 
 /// <summary>
@@ -10,6 +12,12 @@ public interface IGameCommand
     CommandCategory Category { get; }
     string ToStringCommand();
     bool Validate();
+
+    /// <summary>
+    /// The engine action this command drives. Spelled with the engine vocabulary
+    /// (KnightFight.Game.Actions), which is the source of truth for what a turn accepts.
+    /// </summary>
+    GameAction ToGameAction();
 }
 
 /// <summary>
@@ -30,6 +38,7 @@ public abstract record GameCommandBase(
 
     public abstract string ToStringCommand();
     public abstract bool Validate();
+    public abstract GameAction ToGameAction();
 
     // Implicit conversion for easy parsing
     public static implicit operator string(GameCommandBase command) =>

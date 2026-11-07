@@ -188,7 +188,6 @@ MVP covers: spawn, sword / spear / shield, movement, hits.
 
 ### Next
 
-- Wire the UDP game protocol to a live match loop — commands are received and authenticated, but not yet applied to game state.
 - Persist match results so the leaderboard reflects real fights.
 - A live match view for the web UI.
 
@@ -249,6 +248,6 @@ An automated deployment script `install.sh` is provided for Linux hosts to conti
 
 ## Known gaps
 
-- **The UDP game protocol is received but not applied.** `UdpCommandService` authenticates and logs commands; the actual game-state mutation is still a TODO in `CommandProcessor`.
 - **Matches are not persisted.** They live in the API's in-memory `GameManager`, so a restart loses them and the leaderboard is not fed by real fights yet.
+- **No end-to-end match run is exercised in tests.** `TurnService` paces `TickAllActiveGames()` and `CommandProcessorTests` cover the queue path, but nothing asserts a full UDP packet-to-`TurnResult` round trip through the running server.
 - The web UI's leaderboard shows no draws — the leaderboard response carries wins, losses and score, but not the draw count.

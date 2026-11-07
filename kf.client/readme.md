@@ -77,19 +77,19 @@ Fetches the server's public key, encrypts the name and secret with it (RSA-OAEP-
 
 ```shell
 # Authenticate with secret and send command:
-./build/kf_client send-cmd Alice s3cret "move up"
+./build/kf_client send-cmd Alice s3cret "hit_main"
 
 # Send directly with known Base32 OTP seed or 6-digit OTP code:
 ./build/kf_client send-cmd Alice JBSWY3DPEHPK3PXP "turn right" --port 5050
 
 # Custom sequence number and target host:
-./build/kf_client send-cmd Alice s3cret "use hand_left" --host 127.0.0.1 --port 5050 --seq 42
+./build/kf_client send-cmd Alice s3cret "move" --host 127.0.0.1 --port 5050 --seq 42
 ```
 
 Supported standard game commands (case-insensitive):
-- `move up`, `move down`, `move left`, `move right`
+- `move`
 - `turn left`, `turn right`
-- `use hand_left`, `use hand_right`
+- `hit_main`, `hit_off`
 
 ## Configuration
 

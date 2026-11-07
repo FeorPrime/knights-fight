@@ -31,6 +31,11 @@ builder.Services.AddSingleton<IUdpCommandService, UdpCommandService>();
 builder.Services.AddHostedService(provider =>
     (UdpCommandService)provider.GetRequiredService<IUdpCommandService>());
 
+// Turn clock — paces the engine's turn loop over live matches
+builder.Services.AddSingleton<ITurnService, TurnService>();
+builder.Services.AddHostedService(provider =>
+    (TurnService)provider.GetRequiredService<ITurnService>());
+
 builder.Services.AddDbContextFactory<KfContext>(opt =>
 {
     opt.UseNpgsql(BuildConnectionString(), BuildNpgsqlOptions());

@@ -1,10 +1,13 @@
-include:
-  - compose-modules/postgress-compose.yaml
 services:
   kf-db:
+    image: postgres
+    container_name: kf_db
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER:-kf_user}
+      - POSTGRES_PASSWORD=${POSTGRES_PW:?POSTGRES_PW must be set in .env}
+      - POSTGRES_DB=${POSTGRES_DB:-kf_db}
+    volumes:
+      - ./data_vol:/var/lib/postgresql
     ports:
       - "127.0.0.1:5432:5432"
-
-networks:
-  frontend:
-  backend:

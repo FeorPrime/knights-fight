@@ -12,11 +12,11 @@ public static class CommandParser
     private static readonly Dictionary<CommandCategory, Regex> CommandPatterns = new()
     {
         [CommandCategory.Movement] = new Regex(
-            @"^move\s+(up|down|left|right)$",
+            @"^move$",
             RegexOptions.IgnoreCase | RegexOptions.Compiled
         ),
-        [CommandCategory.HandAction] = new Regex(
-            @"^use\s+hand_(left|right)$",
+        [CommandCategory.Attack] = new Regex(
+            @"^hit_(main|off)$",
             RegexOptions.IgnoreCase | RegexOptions.Compiled
         ),
         [CommandCategory.Turn] = new Regex(
@@ -29,9 +29,9 @@ public static class CommandParser
         new()
         {
             [CommandCategory.Movement] = (match, name, otp) =>
-                MovementCommand.FromString(match.Groups[1].Value, name, otp)!,
-            [CommandCategory.HandAction] = (match, name, otp) =>
-                HandCommand.FromString(match.Groups[1].Value, name, otp)!,
+                new MovementCommand(name, otp),
+            [CommandCategory.Attack] = (match, name, otp) =>
+                StrikeCommand.FromString(match.Groups[1].Value, name, otp)!,
             [CommandCategory.Turn] = (match, name, otp) =>
                 TurnCommand.FromString(match.Groups[1].Value, name, otp)!
         };

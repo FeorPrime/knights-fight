@@ -6,28 +6,17 @@ namespace KnightFight.Api.Infrastructure.Models.Commands;
 public enum CommandCategory : byte
 {
     Movement = 0,
-    HandAction = 1,
+    Attack = 1,
     Turn = 2
 }
 
 /// <summary>
-/// Movement directions (game-dev standard)
+/// Which limb performs a strike (readme spec: hit_main / hit_off)
 /// </summary>
-public enum MovementDirection : byte
+public enum StrikeSide : byte
 {
-    Up = 0,
-    Down = 1,
-    Left = 2,
-    Right = 3
-}
-
-/// <summary>
-/// Hand selection for actions
-/// </summary>
-public enum HandSide : byte
-{
-    Left = 0,
-    Right = 1
+    Main = 0,
+    Off = 1
 }
 
 /// <summary>

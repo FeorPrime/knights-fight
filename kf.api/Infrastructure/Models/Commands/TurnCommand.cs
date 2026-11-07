@@ -1,3 +1,5 @@
+using KnightFight.Game.Actions;
+
 namespace KnightFight.Api.Infrastructure.Models.Commands;
 
 /// <summary>
@@ -18,12 +20,16 @@ public sealed record TurnCommand(
         !string.IsNullOrWhiteSpace(OtpCode) &&
         Direction is TurnDirection.Left or TurnDirection.Right;
 
+    public override GameAction ToGameAction() =>
+        Direction == TurnDirection.Left ? GameAction.TurnLeft : GameAction.TurnRight;
+
     public static TurnCommand? FromString(string direction, string challengerName, string otpCode)
     {
         if (Enum.TryParse<TurnDirection>(direction, true, out var dir))
         {
             return new TurnCommand(challengerName, otpCode, dir);
         }
+
         return null;
     }
 }
