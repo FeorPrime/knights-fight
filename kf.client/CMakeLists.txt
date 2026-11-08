@@ -11,6 +11,7 @@ include(cmake/FetchDeps.cmake)
 
 add_executable(kf_client main.cpp
         src/cli/CliApp.cpp
+        src/cfg/ConfigLoader.cpp
         src/crypto/AesGcmDecryptor.cpp
         src/crypto/Base32.cpp
         src/crypto/Base64.cpp
@@ -76,13 +77,29 @@ target_link_libraries(test_udp PRIVATE
         nlohmann_json::nlohmann_json
 )
 
+add_executable(test_config
+        tests/test_config.cpp
+        src/cfg/ConfigLoader.cpp
+)
+
+target_include_directories(test_config PRIVATE
+        "${CMAKE_CURRENT_SOURCE_DIR}/include"
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/"
+)
+
+target_link_libraries(test_config PRIVATE
+        nlohmann_json::nlohmann_json
+)
+
 # Platform-specific niceties
 if(MSVC)
     target_compile_options(kf_client PRIVATE /W4 /utf-8)
     target_compile_options(test_otp PRIVATE /W4 /utf-8)
     target_compile_options(test_udp PRIVATE /W4 /utf-8)
+    target_compile_options(test_config PRIVATE /W4 /utf-8)
 else()
     target_compile_options(kf_client PRIVATE -Wall -Wextra -Wpedantic)
     target_compile_options(test_otp PRIVATE -Wall -Wextra -Wpedantic)
     target_compile_options(test_udp PRIVATE -Wall -Wextra -Wpedantic)
+    target_compile_options(test_config PRIVATE -Wall -Wextra -Wpedantic)
 endif()

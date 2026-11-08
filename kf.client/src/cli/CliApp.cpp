@@ -38,6 +38,14 @@ namespace cli {
         std::cerr << "  move\n";
         std::cerr << "  turn left | turn right\n";
         std::cerr << "  hit_main | hit_off\n\n";
+        std::cerr << "Configuration, highest precedence first:\n";
+        std::cerr << "  1. Arguments: --base-url <url> --udp-host <host> --udp-port <port> --config <file>,\n";
+        std::cerr << "     one per endpoint too (--login-url, --test-url, --challenger-avatar-url, ...).\n";
+        std::cerr << "     Works with any command, before or after it.\n";
+        std::cerr << "  2. Environment: KF_CLIENT_<KEY> for the same keys (KF_CLIENT_BASE_URL, KF_CLIENT_UDP_PORT).\n";
+        std::cerr << "  3. Configuration file: a JSON object of the same keys, read from --config, from\n";
+        std::cerr << "     KF_CLIENT_CONFIG, or from kf_client.config.json in the working directory.\n";
+        std::cerr << "  4. Defaults: the local development addresses - http://localhost:8080/api, 127.0.0.1:5050.\n\n";
         std::cerr << "Examples:\n";
         std::cerr << std::format("  {} create Alice s3cret\n", programName);
         std::cerr << std::format("  {} create Alice s3cret ./my-avatar.png\n", programName);
@@ -47,6 +55,7 @@ namespace cli {
         std::cerr << std::format("  {} lobby\n", programName);
         std::cerr << std::format("  {} send-cmd Alice s3cret \"hit_main\"\n", programName);
         std::cerr << std::format("  {} send-cmd Alice JBSWY3DPEHPK3PXP \"turn right\" --port 5050\n", programName);
+        std::cerr << std::format("  {} lobby --base-url http://10.0.0.2:8080/api\n", programName);
     }
 
     int CliApp::run(int argc, char* argv[]) {
