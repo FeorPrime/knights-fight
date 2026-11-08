@@ -16,3 +16,8 @@ bin/
 .worktrees/
 .superpowers/
 .qwen/
+.vs/
+
+.vs/
+*.swp
+
