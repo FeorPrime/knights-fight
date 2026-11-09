@@ -97,6 +97,18 @@ if(MSVC)
     target_compile_options(test_otp PRIVATE /W4 /utf-8)
     target_compile_options(test_udp PRIVATE /W4 /utf-8)
     target_compile_options(test_config PRIVATE /W4 /utf-8)
+
+    # cpr is built from source above, but vcpkg's post-link step fills the slot
+    # beside the executable with the cpr.dll of its own package, which is the
+    # one the loader opens. Its export table is a different build's, so the
+    # loader can resolve names that our objects never promised and stops with
+    # STATUS_ENTRYPOINT_NOT_FOUND before main() runs. Overwrite it with ours.
+    add_custom_command(TARGET kf_client POST_BUILD
+            COMMAND "${CMAKE_COMMAND}"
+                    "-DBUILD_ROOT=${CMAKE_BINARY_DIR}"
+                    "-DCONFIG=$<CONFIG>"
+                    -P "${CMAKE_CURRENT_SOURCE_DIR}/cmake/AlignCprRuntime.cmake"
+            VERBATIM)
 else()
     target_compile_options(kf_client PRIVATE -Wall -Wextra -Wpedantic)
     target_compile_options(test_otp PRIVATE -Wall -Wextra -Wpedantic)

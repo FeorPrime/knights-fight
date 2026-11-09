@@ -22,9 +22,9 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
     {
         builder.ConfigureAppConfiguration(config =>
         {
-            // Bind the UDP listener to an ephemeral port. The test host would
-            // otherwise fight a locally running API for port 5050 and throw a
-            // SocketException during teardown.
+            // Bind the UDP listener to an ephemeral port. The service claims its port while
+            // starting up and lets a refused bind fail the app, so a test host that kept the
+            // documented 5050 would fight a locally running API and every Fact here would fail.
             config.AddInMemoryCollection(new Dictionary<string, string?>
             {
                 ["UdpSettings:Port"] = "0",

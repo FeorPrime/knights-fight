@@ -7,7 +7,11 @@ FetchContent_Declare(
         GIT_SHALLOW    TRUE      # Only downloads the latest commit (much faster)
         GIT_PROGRESS   TRUE      # Prints download progress to the console
 )
-set(CPR_USE_SYSTEM_CURL ON)
+# System libcurl is the default; a plain set() here would also shadow a -DCPR_USE_SYSTEM_CURL=OFF
+# from the command line, so only fill it in when the caller did not choose.
+if(NOT DEFINED CPR_USE_SYSTEM_CURL)
+    set(CPR_USE_SYSTEM_CURL ON)
+endif()
 
 
 FetchContent_Declare(

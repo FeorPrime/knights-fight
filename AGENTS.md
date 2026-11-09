@@ -59,7 +59,7 @@ The API surface is described in **three** places. They now agree; keep it that w
 |---|---|---|
 | 8080 | HTTP | ASP.NET API — `Properties/launchSettings.json`, Dockerfile EXPOSE, `kf.client/include/cfg/AppConfig.h`, nginx → `kf-api:8080` |
 | 8081 | HTTP | Web UI container (`compose.yaml`, `WEB_PORT`) |
-| 5050 | UDP | Game command protocol — `UdpCommandService`, `UdpSettings:Port` in `appsettings.json` |
+| 5050 | UDP | Game command protocol — `UdpCommandService`, `UdpSettings:Port` in `appsettings.json`; **5051 in development** (`appsettings.Development.json`) because a UDP port has one global namespace and a Windows system service (`svchost`) or a second API instance can already own 5050 — the bind failure now fails startup rather than being logged and swallowed |
 | 5173 | HTTP | Vite dev server (`kf.web_ui`) |
 | 80 / 443 | HTTP(S) | nginx reverse proxy — routes `/api/` to the API, `/` to the web UI |
 

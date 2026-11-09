@@ -36,6 +36,12 @@ dotnet run --project kf.api/kf.api.csproj --urls http://localhost:8080
 
 The HTTP API listens on **8080**, and the UDP game protocol listens on **5050**. Migrations are applied automatically at startup. Watch the console for `Now listening on: http://localhost:8080` and `UDP server listening on port 5050`.
 
+On Windows the game port is often already owned by a system service, and the API then refuses to start rather than run with a dead game channel — see [Troubleshooting](#troubleshooting) for how to find the owner, or run with the launch profile, which uses 5051 in development:
+
+```bash
+dotnet run --project kf.api/kf.api.csproj --profile http
+```
+
 Verify it:
 
 ```bash
@@ -88,7 +94,7 @@ Requires vcpkg packages: `curl openssl cpr nlohmann-json`.
 | Port | Protocol | What runs there |
 |---|---|---|
 | 8080 | HTTP | ASP.NET API |
-| 5050 | UDP | Game command protocol (`UdpCommandService`) |
+| 5050 | UDP | Game command protocol (`UdpCommandService`) — one listener per UDP port; development runs use **5051** (`appsettings.Development.json`), see [Troubleshooting](#troubleshooting) |
 | 8081 | HTTP | Web UI container (`WEB_PORT` in compose) |
 | 5173 | HTTP | Vite dev server |
 | 5432 | TCP | Postgres (`127.0.0.1:5432` in dev) |
@@ -141,6 +147,8 @@ The compose build paths match the current layout: `compose.yaml` points at `kf.a
 ## Troubleshooting
 
 **API exits immediately with `POSTGRES_PW Is not set`** — the variable is read from the shell environment or `appsettings`, not from a file you should edit. Export it in the shell that launches the API.
+
+**API refuses to start with `Only one usage of a socket address (protocol/network address/port) is normally permitted`** — the UDP game port is already claimed by another listener. `UdpCommandService` claims its port while starting up and lets a refused bind fail the app, because HTTP running with a dead game-command channel is a quieter failure than a startup you can read. One listener per UDP port is an OS-wide rule: another API instance does it, and on Windows system services (`svchost` media/streaming) squat on UDP ports globally. Find the owner with `netstat -ano -p udp | findstr ":5050"` on Windows (`netstat -abnone` as administrator names the process) or `lsof -nP -iUDP:5050` on Linux, then stop it or move this run: `UdpSettings__Port=5051` in the environment overrides `appsettings.json` for that process only. `appsettings.Development.json` already carries 5051 and is loaded when `ASPNETCORE_ENVIRONMENT=Development`, which the launch profile in `Properties/launchSettings.json` sets — production and the container keep **5050**, so the documented protocol port never moves.
 
 **"Address already in use" on 8080** — another API instance is already running. Find it with `lsof -nP -iTCP:8080 -sTCP:LISTEN` and stop it, or reuse it.
 
