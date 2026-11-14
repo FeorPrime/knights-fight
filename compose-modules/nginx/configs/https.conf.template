@@ -1,19 +1,28 @@
-#server {
-#    listen 80 default_server;
-#    listen [::]:80 default_server;
-#    server_name _;
-#    return 404;
-#}
-
 server {
-    listen 443 default_server;
-    listen [::]:443 default_server;
-    server_name _;
-    return 404;
+    listen 80 default_server;
+    listen [::]:80 default_server;
+    
+    server_name _; # The "_" acts as a catch-all for any unmatched Host header
+
+    # Option A: Drop the connection completely (Recommended)
+    # This saves server resources and hides Nginx from IP scanners/bots
+    return 444; 
+
+    # Option B: Return a 403 Forbidden error (Alternative)
+    # return 403;
 }
 
 server {
-    listen 80 default_server;
+    listen 443 ssl default_server;
+    listen [::]:443 ssl default_server;
+    
+    server_name _;
+    
+    ssl_reject_handshake on; 
+}
+
+server {
+    listen 80;
     server_name ${DOMAIN} www.${DOMAIN};
     return 301 https://$host$request_uri;
 }
