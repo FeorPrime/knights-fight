@@ -54,7 +54,7 @@ update_repo() {
 install_cron() {
     chmod +x "$SCRIPT_PATH"
     
-    CRON_JOB="* * * * * /bin/bash \"$SCRIPT_PATH\" --update $CRON_TAG"
+    CRON_JOB="*/5 * * * * /bin/bash \"$SCRIPT_PATH\" --update $CRON_TAG"
 
     CURRENT_CRONTAB="$(crontab -l 2>/dev/null || true)"
 
