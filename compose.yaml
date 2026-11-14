@@ -17,7 +17,7 @@ services:
       POSTGRES_USER: ${POSTGRES_USER:-kf_user}
       POSTGRES_PW: ${POSTGRES_PW:?PG_PASS must be set in .env}
       POSTGRES_DB: ${POSTGRES_DB:-kf_db}
-      ConnectionStrings__DefaultConnection: Host=localhost;Database=${POSTGRES_DB:-kf_db};Username=${POSTGRES_USER:-kf_user};Password=${POSTGRES_PW:?PG_PASS must be set in .env}
+      ConnectionStrings__DefaultConnection: Host=kf-db;Database=${POSTGRES_DB:-kf_db};Username=${POSTGRES_USER:-kf_user};Password=${POSTGRES_PW:?PG_PASS must be set in .env}
     build:
       context: .
       dockerfile: kf.api/Dockerfile
