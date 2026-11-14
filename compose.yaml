@@ -29,8 +29,8 @@ services:
     image: ${WEB_IMAGE:-kf.web_ui:latest}
     container_name: kf_web
     restart: unless-stopped
-    ports:
-      - "${WEB_PORT:-8081}:80"
+    #ports:
+    # - "${WEB_PORT:-8081}:80"
     build:
       context: kf.web_ui
       dockerfile: Dockerfile
