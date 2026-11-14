@@ -7,6 +7,8 @@ services:
       - POSTGRES_USER=${POSTGRES_USER:-kf_user}
       - POSTGRES_PASSWORD=${POSTGRES_PW:?POSTGRES_PW must be set in .env}
       - POSTGRES_DB=${POSTGRES_DB:-kf_db}
+    env_file:
+      - .env
     volumes:
       - ./data_vol:/var/lib/postgresql
     healthcheck:
