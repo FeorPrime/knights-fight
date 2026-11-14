@@ -49,13 +49,13 @@ else
         reason="cert expires within 30 days"
     fi
 
-    if [ "$cn" != "$DOMAIN" ]; then
-        # CN mismatch is only fatal if SAN also lacks DOMAIN
-        if ! echo "$san" | grep -q "DNS:${DOMAIN}\([,[:space:]]\|$\)"; then
-            need_regen=1
-            reason="cert CN='$cn' SAN does not include '$DOMAIN'"
-        fi
-    fi
+#    if [ "$cn" != "$DOMAIN" ]; then
+#        # CN mismatch is only fatal if SAN also lacks DOMAIN
+#        if ! echo "$san" | grep -q "DNS:${DOMAIN}\([,[:space:]]\|$\)"; then
+#            need_regen=1
+#            reason="cert CN='$cn' SAN does not include '$DOMAIN'"
+#        fi
+#    fi
 
     # Key/cert pair sanity
     if [ "${need_regen}" = "0" ]; then
