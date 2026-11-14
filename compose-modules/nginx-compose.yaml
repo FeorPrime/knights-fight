@@ -14,7 +14,7 @@ services:
       CERT_DAYS: ${CERT_DAYS:-3650}
       NGINX_ENTRYPOINT_LISTEN_ON_IPV6_BY_DEFAULT: "false"
     env_file:
-      - .env
+      - ../.env
     volumes:
       - ./nginx/configs:/etc/nginx/configs:ro
       - ./nginx/certs:/etc/nginx/certs
