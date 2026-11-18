@@ -74,7 +74,12 @@ ApplyMigrations(app);
 
 app.MapOpenApi("/api/openapi/{documentName}.json");
 app.MapScalarApiReference("/api/scalar", options => options.WithOpenApiRoutePattern("/api/openapi/{documentName}.json"));
-app.UseSwaggerUI(options => options.SwaggerEndpoint("/api/openapi/v1.json", "KnightFight API v1"));
+app.UseSwaggerUI(options =>
+{
+    options.SwaggerEndpoint("/api/openapi/v1.json", "KnightFight API v1");
+    options.RoutePrefix = "api/swagger";
+    options.EnableTryItOutByDefault();
+});
 
 app.UseAuthentication();
 app.UseAuthorization();
