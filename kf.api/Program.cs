@@ -72,8 +72,8 @@ var app = builder.Build();
 
 ApplyMigrations(app);
 
-app.MapOpenApi();
-app.MapScalarApiReference();
+app.MapOpenApi("/api/openapi/");
+app.MapScalarApiReference("/api/openapi/");
 
 app.UseAuthentication();
 app.UseAuthorization();
