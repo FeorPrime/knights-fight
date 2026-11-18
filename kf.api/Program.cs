@@ -10,8 +10,11 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Npgsql;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Infrastructure;
+using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddOpenApi();
 
 builder.Services.AddTransient<IAuthService, AuthService>();
 builder.Services.AddSingleton<IOtpService, OtpService>();
@@ -68,6 +71,9 @@ builder.Services.AddAuthorization();
 var app = builder.Build();
 
 ApplyMigrations(app);
+
+app.MapOpenApi();
+app.MapScalarApiReference();
 
 app.UseAuthentication();
 app.UseAuthorization();
