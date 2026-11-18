@@ -72,8 +72,8 @@ var app = builder.Build();
 
 ApplyMigrations(app);
 
-app.MapOpenApi("/api/openapi/");
-app.MapScalarApiReference("/api/openapi/");
+app.MapOpenApi("/api/openapi/{documentName}.json");
+app.MapScalarApiReference("/api/scalar", options => options.WithOpenApiRoutePattern("/api/openapi/{documentName}.json"));
 
 app.UseAuthentication();
 app.UseAuthorization();
