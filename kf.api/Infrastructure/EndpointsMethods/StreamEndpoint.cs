@@ -35,7 +35,8 @@ public abstract class StreamEndpoint<TEvent>(string uriPattern) : ApiMethod(uriP
     protected abstract IAsyncEnumerable<TEvent> ReadEvents(CancellationToken cancellationToken);
 
     public override void MapEndpoint(WebApplication app)
-        => app.MapGet(UriPattern, async (HttpContext context) => await Stream(context, context.RequestAborted));
+        => app.MapGet(UriPattern, async (HttpContext context) => await Stream(context, context.RequestAborted))
+            .WithGroupName("StreamEndpoints");
 
     public async Task Stream(HttpContext context, CancellationToken cancellationToken)
     {
