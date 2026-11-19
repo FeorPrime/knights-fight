@@ -12,7 +12,7 @@ export type Match = {
 export function CurrentMatchesWidget() {
     const { data: matches } = useQuery({
         queryKey: ['matches'],
-        queryFn: () => apiClient.get('matches').json<Match[]>(),
+        queryFn: () => apiClient.get('match').json<Match[]>(),
         staleTime: 10_000,
     });
 
