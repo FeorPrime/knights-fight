@@ -26,6 +26,12 @@ cmake --build build-win --config Debug --parallel 2
 cmake --build build-win --config Release --parallel 2
 ```
 
+may be you will need another build command (check path to compiler! probably you have another version! check path to vcpkg!):
+
+```shell
+cmake -S . -B build-msvc -DCMAKE_CXX_COMPILER="C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\bin\Hostx64\x64\cl.exe" -DCMAKE_TOOLCHAIN_FILE="C:\vcpkg\scripts\buildsystems\vcpkg.cmake" -DOPENSSL_ROOT_DIR="C:\vcpkg\installed\x64-windows\bin"
+```
+
 Keep `--parallel` at 2 on this machine: at 8 the MSVC compiler runs out of heap (`C1060`) while building the in-tree cpr/OpenSSL sources.
 
 The default generator here is Visual Studio (multi-config), so the binaries land under `build-win\Debug\`:

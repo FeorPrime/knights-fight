@@ -261,7 +261,7 @@ namespace cli {
         // 3. Test the token
         const auto authResult = loginResult.value();
         std::cout << std::format("   [✓] OTP Seed: {}\n", authResult.otp);
-        std::cout << "3. Testing token against /test endpoint...\n";
+        std::cout << "3. Testing token against "<< cfg_.testUrl <<" endpoint...\n";
 
         auto r = cpr::Get(
             cpr::Url{cfg_.testUrl},
@@ -269,14 +269,14 @@ namespace cli {
         );
 
         if (r.error.code == cpr::ErrorCode::OK) {
-            std::cout << std::format("   [✓] GET /test response ({}): {}\n", r.status_code, r.text);
+            std::cout << std::format("   [✓] GET {} response ({}): {}\n", cfg_.testUrl, r.status_code, r.text);
         } else {
-            std::cerr << std::format("   [!] GET /test failed: {}\n", r.error.message);
+            std::cerr << std::format("   [!] GET {} failed: {}\n", cfg_.testUrl, r.error.message);
             return 1;
         }
 
         // 4. Test OTP
-        std::cout << "4. Testing OTP against /test-otp endpoint...\n";
+        std::cout << "4. Testing OTP against "<<cfg_.testOtpUrl<<" endpoint...\n";
         auto otpCodeResult = crypto::OtpService::generateTotp(authResult.otp);
         if (!otpCodeResult) {
             std::cerr << std::format("   [!] Failed to generate OTP code: {}\n", otpCodeResult.error());
@@ -290,13 +290,13 @@ namespace cli {
         );
 
         if (rOtp.error.code == cpr::ErrorCode::OK) {
-            std::cout << std::format("   [✓] GET /test-otp response ({}): {}\n", rOtp.status_code, rOtp.text);
+            std::cout << std::format("   [✓] GET {} response ({}): {}\n", cfg_.testOtpUrl, rOtp.status_code, rOtp.text);
             if (rOtp.status_code < 200 || rOtp.status_code >= 300) {
-                std::cerr << std::format("   [!] GET /test-otp returned error status: {}\n", rOtp.status_code);
+                std::cerr << std::format("   [!] GET {} returned error status: {}\n", cfg_.testOtpUrl, rOtp.status_code);
                 return 1;
             }
         } else {
-            std::cerr << std::format("   [!] GET /test-otp failed: {}\n", rOtp.error.message);
+            std::cerr << std::format("   [!] GET {} failed: {}\n", cfg_.testOtpUrl, rOtp.error.message);
             return 1;
         }
 

@@ -18,11 +18,11 @@ namespace cfg {
         std::string publicKeyUrl = baseUrl + "/auth/public-key";
         std::string createChallengerUrl = baseUrl + "/challenger";
         std::string loginUrl = baseUrl + "/auth/login";
-        std::string testUrl = baseUrl + "/test";
-        std::string testOtpUrl = baseUrl + "/test-otp";
+        std::string testUrl = baseUrl + "/test/auth";
+        std::string testOtpUrl = baseUrl + "/test/otp";
         std::string lobbyUrl = baseUrl + "/lobby";
         std::string lobbyStatusUrl = baseUrl + "/lobby/status";
-        std::string challengerAvatarUrl = baseUrl + "/challengers/{id}/avatar";
+        std::string challengerAvatarUrl = baseUrl + "/challenger/{id}/avatar";
         std::string udpHost = "127.0.0.1";
         int udpPort = 5050;
         // timeouts, retries, etc. can grow here
