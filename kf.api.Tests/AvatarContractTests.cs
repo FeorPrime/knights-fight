@@ -31,7 +31,7 @@ public class AvatarContractTests : IClassFixture<CustomWebApplicationFactory>
     [Fact]
     public async Task GetAvatar_UnknownChallenger_ReturnsNotFound()
     {
-        var response = await _client.GetAsync("/api/challengers/999999/avatar");
+        var response = await _client.GetAsync("/api/challenger/999999/avatar");
 
         Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
     }
@@ -46,7 +46,7 @@ public class AvatarContractTests : IClassFixture<CustomWebApplicationFactory>
             c.DefaultAvatarIndex = null;
         });
 
-        var response = await _client.GetAsync($"/api/challengers/{id}/avatar");
+        var response = await _client.GetAsync($"/api/challenger/{id}/avatar");
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         Assert.Equal("image/png", response.Content.Headers.ContentType?.MediaType);
@@ -64,7 +64,7 @@ public class AvatarContractTests : IClassFixture<CustomWebApplicationFactory>
             c.DefaultAvatarIndex = 3;
         });
 
-        var response = await _client.GetAsync($"/api/challengers/{id}/avatar");
+        var response = await _client.GetAsync($"/api/challenger/{id}/avatar");
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         Assert.Equal("image/png", response.Content.Headers.ContentType?.MediaType);
@@ -82,7 +82,7 @@ public class AvatarContractTests : IClassFixture<CustomWebApplicationFactory>
             c.DefaultAvatarIndex = null;
         });
 
-        var response = await _client.GetAsync($"/api/challengers/{id}/avatar");
+        var response = await _client.GetAsync($"/api/challenger/{id}/avatar");
 
         Assert.NotNull(response.Headers.ETag);
         Assert.NotEmpty(response.Headers.ETag!.Tag);
@@ -113,7 +113,7 @@ public class AvatarContractTests : IClassFixture<CustomWebApplicationFactory>
         Assert.InRange(challenger.DefaultAvatarIndex!.Value, 0, 9);
 
         // the assigned default is immediately fetchable
-        var avatar = await _client.GetAsync($"/api/challengers/{id}/avatar");
+        var avatar = await _client.GetAsync($"/api/challenger/{id}/avatar");
         Assert.Equal(HttpStatusCode.OK, avatar.StatusCode);
         Assert.Equal("image/png", avatar.Content.Headers.ContentType?.MediaType);
     }
@@ -135,7 +135,7 @@ public class AvatarContractTests : IClassFixture<CustomWebApplicationFactory>
         Assert.NotNull(items);
 
         var item = items.Single(i => i.Id == id);
-        Assert.Equal($"/api/challengers/{id}/avatar", item.AvatarUrl);
+        Assert.Equal($"/api/challenger/{id}/avatar", item.AvatarUrl);
     }
 
     [Fact]
@@ -147,14 +147,14 @@ public class AvatarContractTests : IClassFixture<CustomWebApplicationFactory>
             c.DefaultAvatarIndex = null;
         });
 
-        var response = await _client.GetAsync("/api/challengers?page=0&page_size=20");
+        var response = await _client.GetAsync("/api/challenger?page=0&page_size=20");
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
         var page = await response.Content.ReadFromJsonAsync<PagedChallengersResponse>(JsonOptions);
         Assert.NotNull(page);
 
         var item = page.Items.Single(i => i.Id == id);
-        Assert.Equal($"/api/challengers/{id}/avatar", item.AvatarUrl);
+        Assert.Equal($"/api/challenger/{id}/avatar", item.AvatarUrl);
     }
 
     [Fact]
@@ -169,14 +169,14 @@ public class AvatarContractTests : IClassFixture<CustomWebApplicationFactory>
         var seedsProvider = _factory.Services.GetRequiredService<IOtpSeedsProvider>();
         await seedsProvider.ForceAdd("LobbyAvatarKnight", "SEED-AVATAR");
 
-        var response = await _client.GetAsync("/api/lobby");
+        var response = await _client.GetAsync("/api/lobby/status");
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
         var status = await response.Content.ReadFromJsonAsync<LobbyStatusResponse>(JsonOptions);
         Assert.NotNull(status);
 
         var player = status.Players.Single(p => p.Name == "LobbyAvatarKnight");
-        Assert.Equal($"/api/challengers/{id}/avatar", player.AvatarUrl);
+        Assert.Equal($"/api/challenger/{id}/avatar", player.AvatarUrl);
     }
 
     [Fact]
@@ -187,7 +187,7 @@ public class AvatarContractTests : IClassFixture<CustomWebApplicationFactory>
         using var content = new MultipartFormDataContent();
         content.Add(new ByteArrayContent(MakePng()), "avatar", "avatar.png");
 
-        var response = await _client.PostAsync($"/api/challengers/{id}/avatar", content);
+        var response = await _client.PostAsync($"/api/challenger/{id}/avatar", content);
 
         Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
     }
@@ -203,7 +203,7 @@ public class AvatarContractTests : IClassFixture<CustomWebApplicationFactory>
         using var content = new MultipartFormDataContent();
         content.Add(new ByteArrayContent(MakePng()), "avatar", "avatar.png");
 
-        using var request = new HttpRequestMessage(HttpMethod.Post, $"/api/challengers/{otherId}/avatar");
+        using var request = new HttpRequestMessage(HttpMethod.Post, $"/api/challenger/{otherId}/avatar");
         request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
         request.Content = content;
 
@@ -222,7 +222,7 @@ public class AvatarContractTests : IClassFixture<CustomWebApplicationFactory>
         using var content = new MultipartFormDataContent();
         content.Add(new ByteArrayContent("not an image"u8.ToArray()), "avatar", "avatar.txt");
 
-        using var request = new HttpRequestMessage(HttpMethod.Post, $"/api/challengers/{id}/avatar");
+        using var request = new HttpRequestMessage(HttpMethod.Post, $"/api/challenger/{id}/avatar");
         request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
         request.Content = content;
 
@@ -241,7 +241,7 @@ public class AvatarContractTests : IClassFixture<CustomWebApplicationFactory>
         using var content = new MultipartFormDataContent();
         content.Add(new ByteArrayContent(MakePng()), "avatar", "avatar.png");
 
-        using var request = new HttpRequestMessage(HttpMethod.Post, $"/api/challengers/{id}/avatar");
+        using var request = new HttpRequestMessage(HttpMethod.Post, $"/api/challenger/{id}/avatar");
         request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
         request.Content = content;
 
@@ -258,7 +258,7 @@ public class AvatarContractTests : IClassFixture<CustomWebApplicationFactory>
         Assert.Null(challenger.DefaultAvatarIndex);
 
         // and it is what the avatar route now serves
-        var served = await _client.GetAsync($"/api/challengers/{id}/avatar");
+        var served = await _client.GetAsync($"/api/challenger/{id}/avatar");
         Assert.Equal(HttpStatusCode.OK, served.StatusCode);
     }
 

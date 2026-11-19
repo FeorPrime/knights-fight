@@ -69,6 +69,10 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddAuthorization();
 
+builder.Services.AddCors(options =>
+    options.AddPolicy("Development", policy =>
+        policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()));
+
 var app = builder.Build();
 
 ApplyMigrations(app);
@@ -81,6 +85,9 @@ app.UseSwaggerUI(options =>
     options.RoutePrefix = "api/swagger";
     options.EnableTryItOutByDefault();
 });
+
+if (app.Environment.IsDevelopment())
+    app.UseCors("Development");
 
 app.UseAuthentication();
 app.UseAuthorization();

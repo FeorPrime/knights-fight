@@ -8,7 +8,7 @@ public static partial class ApiMap
     
     public static class Auth
     {
-        private const string RESOURCE_ROOT = $"{API_ROOT}/Auth";
+        private const string RESOURCE_ROOT = $"{API_ROOT}/auth";
         public const string GET_PUBLIC_KEY = $"{RESOURCE_ROOT}/public-key";
         public const string LOGIN = $"{RESOURCE_ROOT}/login";
 

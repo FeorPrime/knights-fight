@@ -106,7 +106,7 @@ public class EndpointContractTests : IClassFixture<CustomWebApplicationFactory>
         });
 
         // Test snake_case query param
-        var response = await _client.GetAsync("/api/challengers?page=0&page_size=5");
+        var response = await _client.GetAsync("/api/challenger?page=0&page_size=5");
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
         var content = await response.Content.ReadFromJsonAsync<PagedChallengersResponse>(JsonOptions);
@@ -170,7 +170,7 @@ public class EndpointContractTests : IClassFixture<CustomWebApplicationFactory>
     public async Task GetChallengersStream_ConnectsAndStreamsEvents()
     {
         using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
-        var request = new HttpRequestMessage(HttpMethod.Get, "/api/challengers/stream");
+        var request = new HttpRequestMessage(HttpMethod.Get, "/api/challenger/stream");
         var response = await _client.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cts.Token);
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -195,7 +195,7 @@ public class EndpointContractTests : IClassFixture<CustomWebApplicationFactory>
     [Fact]
     public async Task GetMatches_ReturnsOk()
     {
-        var response = await _client.GetAsync("/api/matches");
+        var response = await _client.GetAsync("/api/match");
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
         var content = await response.Content.ReadFromJsonAsync<List<MatchDto>>(JsonOptions);
@@ -205,7 +205,7 @@ public class EndpointContractTests : IClassFixture<CustomWebApplicationFactory>
     [Fact]
     public async Task GetLobby_ReturnsOk()
     {
-        var response = await _client.GetAsync("/api/lobby");
+        var response = await _client.GetAsync("/api/lobby/status");
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
         var content = await response.Content.ReadFromJsonAsync<LobbyStatusResponse>(JsonOptions);
@@ -229,7 +229,7 @@ public class EndpointContractTests : IClassFixture<CustomWebApplicationFactory>
         });
 
         // 1. Get lobby: challenger appears with isReady = false / unready
-        var response1 = await _client.GetAsync("/api/lobby");
+        var response1 = await _client.GetAsync("/api/lobby/status");
         Assert.Equal(HttpStatusCode.OK, response1.StatusCode);
 
         var content1 = await response1.Content.ReadFromJsonAsync<LobbyStatusResponse>(JsonOptions);
@@ -251,7 +251,7 @@ public class EndpointContractTests : IClassFixture<CustomWebApplicationFactory>
         Assert.Equal(HttpStatusCode.OK, postResponse.StatusCode);
 
         // 4. Get lobby: challenger appears with isReady = true / ready
-        var response2 = await _client.GetAsync("/api/lobby");
+        var response2 = await _client.GetAsync("/api/lobby/status");
         Assert.Equal(HttpStatusCode.OK, response2.StatusCode);
 
         var content2 = await response2.Content.ReadFromJsonAsync<LobbyStatusResponse>(JsonOptions);
@@ -329,7 +329,7 @@ public class EndpointContractTests : IClassFixture<CustomWebApplicationFactory>
         var outcome = await matchService.TryStartMatchesAsync();
         var match = Assert.Single(outcome.StartedMatches);
 
-        var response = await _client.GetAsync("/api/matches");
+        var response = await _client.GetAsync("/api/match");
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
         var content = await response.Content.ReadFromJsonAsync<List<MatchDto>>(JsonOptions);
@@ -354,13 +354,13 @@ public class EndpointContractTests : IClassFixture<CustomWebApplicationFactory>
         var outcome = await matchService.TryStartMatchesAsync();
         var match = Assert.Single(outcome.StartedMatches);
 
-        var found = await _client.GetAsync($"/api/matches/{match.Id}");
+        var found = await _client.GetAsync($"/api/match/{match.Id}");
         Assert.Equal(HttpStatusCode.OK, found.StatusCode);
         var body = await found.Content.ReadFromJsonAsync<MatchDto>(JsonOptions);
         Assert.NotNull(body);
         Assert.Equal(match.Id.ToString(), body.Id);
 
-        var missing = await _client.GetAsync($"/api/matches/{Guid.NewGuid()}");
+        var missing = await _client.GetAsync($"/api/match/{Guid.NewGuid()}");
         Assert.Equal(HttpStatusCode.NotFound, missing.StatusCode);
     }
 }
