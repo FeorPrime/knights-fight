@@ -15,6 +15,9 @@ public class LeaderboardGet(IDbContextFactory<KfContext> factory)
     private const int MIN_LIMIT = 1;
     private const int MAX_LIMIT = 100;
 
+    [Tags("Leaderboard")]
+    [EndpointSummary("Get Leaderboard data")]
+    [EndpointDescription("Show all players stats, sorted and filtered")]
     public override async Task<IResult> Handler([AsParameters] GetLeaderboardRequest request)
     {
         var limit = Math.Clamp(request.Limit ?? DEFAULT_LIMIT, MIN_LIMIT, MAX_LIMIT);

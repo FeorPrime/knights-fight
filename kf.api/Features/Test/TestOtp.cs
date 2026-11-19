@@ -4,9 +4,11 @@ using KnightFight.Api.Infrastructure.Services.Crypto;
 
 namespace KnightFight.Api.Features.Test;
 
-public class TestOtp(IOtpService otpService, IOtpSeedsProvider seedsProvider) : GetFilteredEndpoint<TestOtpRequest>("/api/test-otp")
+public class TestOtp(IOtpService otpService, IOtpSeedsProvider seedsProvider) : GetFilteredEndpoint<TestOtpRequest>("/api/test/otp")
 {
-    
+    [Tags("Test")]
+    [EndpointSummary("Test for otp codes")]
+    [EndpointDescription("Method for auth testing. Will test your's otp code for challenger.")]
     public override async Task<IResult> Handler([AsParameters] TestOtpRequest request)
     {
         var seed = await seedsProvider.Get(request.ChallengerName);

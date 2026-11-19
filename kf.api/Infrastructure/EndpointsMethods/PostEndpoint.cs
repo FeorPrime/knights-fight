@@ -14,8 +14,7 @@ public abstract class PostEndpoint<TRequest>(string uriPattern) : ApiMethod(uriP
     public override void MapEndpoint(WebApplication app)
     {
         if (string.IsNullOrEmpty(UriPattern)) throw new ArgumentNullException(nameof(UriPattern));
-        app.MapPost(UriPattern, Handler)
-            .WithGroupName("PostEndpoints");;
+        app.MapPost(UriPattern, Handler);
     }
 
     public abstract Task<IResult> Handler([FromBody]TRequest request);

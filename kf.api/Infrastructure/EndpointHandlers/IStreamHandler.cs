@@ -2,5 +2,5 @@ namespace KnightFight.Api.Infrastructure.EndpointHandlers;
 
 public interface IStreamHandler
 {
-    Task Stream(HttpContext context, CancellationToken cancellationToken);
+    Task Stream(IHttpContextAccessor context, CancellationToken cancellationToken);
 }

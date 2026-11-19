@@ -19,12 +19,11 @@ public class ChallengerGetAll(IDbContextFactory<KfContext> factory)
     public override void MapEndpoint(WebApplication app)
     {
         app.MapGet(UriPattern, Handler);
-        app.MapGet(ApiMap.Challenger.GET_ALL_LEGACY, Handler);
     }
 
-    // [AsParameters] binds every property of the request from the query string.
-    // It must sit on this override: the framework binds the override, and binding
-    // attributes are not inherited from the abstract declaration in the base class.
+    [Tags("Challenger")]
+    [EndpointSummary("Get all challengers")]
+    [EndpointDescription("Show all players, who handle registration, filtered and sorted")]
     public override async Task<IResult> Handler([AsParameters] GetAllChallengerRequest request)
     {
         var page = Math.Max(request.Page ?? DEFAULT_PAGE, 0);

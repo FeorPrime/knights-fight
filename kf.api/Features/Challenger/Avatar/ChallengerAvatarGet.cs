@@ -5,7 +5,7 @@ using KnightFight.Api.Infrastructure.Services;
 using KnightFight.Api.Models.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace KnightFight.Api.Features.Challenger;
+namespace KnightFight.Api.Features.Challenger.Avatar;
 
 /// <summary>
 /// Serves a challenger's avatar as PNG.
@@ -27,7 +27,10 @@ public class ChallengerAvatarGet(
     {
         app.MapGet(UriPattern, Handler);
     }
-
+    
+    [Tags("Challenger/Avatar")]
+    [EndpointSummary("Gets challenger avatar")]
+    [EndpointDescription("Gets challenger avatar")]
     public async Task<IResult> Handler(long id, HttpContext http)
     {
         await using var ctx = await factory.CreateDbContextAsync();

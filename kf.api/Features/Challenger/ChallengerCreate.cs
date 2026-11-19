@@ -6,13 +6,13 @@ using KnightFight.Api.Infrastructure.Services.Crypto;
 using KnightFight.Api.Models.Mappers;
 using KnightFight.Api.Models.Requests;
 using KnightFight.Api.Models.Responses;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace KnightFight.Api.Features.Challenger;
 
 public class ChallengerCreate(
     IDbContextFactory<KfContext> factory,
-    ILogger<ChallengerCreate> logger,
     INewcomerNotificationService notificationService,
     IDefaultAvatarProvider defaultAvatars)
     : EncryptedPostEndpoint<CreateChallengerRequest>(ApiMap.Challenger.CREATE)
@@ -43,6 +43,14 @@ public class ChallengerCreate(
         return ExceptResult<CreateChallengerResponse>.Failure(CANT_SAVE_CHALLENGER);
     }
 
+    [Tags("Challenger")]
+    [EndpointSummary("create new challenger")]
+    [EndpointDescription("Encrypted endpoint to create new challenger")]
+    public override async Task<IResult> Handler([FromBody] EncryptedRequest data)
+    {
+        return await base.Handler(data);
+    }
+    
     protected override async Task<IResult> Handle(CreateChallengerRequest request, string? openPayload)
     {
         await using var ctx = await factory.CreateDbContextAsync();

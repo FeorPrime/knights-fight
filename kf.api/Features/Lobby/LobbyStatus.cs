@@ -12,9 +12,11 @@ public class LobbyStatus(IOtpSeedsProvider seedsProvider, IDbContextFactory<KfCo
     public override void MapEndpoint(WebApplication app)
     {
         app.MapGet(UriPattern, Handler);
-        app.MapGet(ApiMap.Lobby.JOIN, Handler); // alias GET /api/lobby
     }
 
+    [Tags("Lobby")]
+    [EndpointSummary("Get Lobby data")]
+    [EndpointDescription("Shows all players, registred in lobby, also queued for match and their's count")]
     public override async Task<IResult> Handler()
     {
         var users = await seedsProvider.GetLobbyUsers();

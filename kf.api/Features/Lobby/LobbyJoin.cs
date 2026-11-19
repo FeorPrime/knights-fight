@@ -3,7 +3,6 @@ using KnightFight.Api.Infrastructure.EndpointsMethods;
 using KnightFight.Api.Infrastructure.Services;
 using KnightFight.Api.Models.Responses;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace KnightFight.Api.Features.Lobby;
@@ -12,6 +11,9 @@ public class LobbyJoin(IOtpSeedsProvider seedsProvider, ILobbyMatchService match
     : PostEndpoint<LobbyJoinRequest>(ApiMap.Lobby.JOIN)
 {
     [Authorize]
+    [Tags("Lobby")]
+    [EndpointSummary("Join to the Lobby")]
+    [EndpointDescription("Reg player to lobby")]
     public override async Task<IResult> Handler([FromBody] LobbyJoinRequest request)
     {
         if (string.IsNullOrWhiteSpace(request.ChallengerName))

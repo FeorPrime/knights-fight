@@ -18,10 +18,9 @@ public static partial class ApiMap
     {
         private const string RESOURCE_ROOT = $"{API_ROOT}/challenger";
         public const string CREATE = RESOURCE_ROOT;
-        public const string GET_ALL = $"{API_ROOT}/challengers";
-        public const string GET_ALL_LEGACY = RESOURCE_ROOT;
-        public const string STREAM = $"{API_ROOT}/challengers/stream";
-        public const string AVATAR = $"{API_ROOT}/challengers/{{id}}/avatar";
+        public const string GET_ALL = RESOURCE_ROOT;
+        public const string STREAM = $"{RESOURCE_ROOT}/stream";
+        public const string AVATAR = $"{RESOURCE_ROOT}/{{id}}/avatar";
     }
 
     public static class Leaderboard
@@ -31,8 +30,8 @@ public static partial class ApiMap
 
     public static class Match
     {
-        public const string GET_ALL = $"{API_ROOT}/matches";
-        public const string GET_BY_ID = $"{API_ROOT}/matches/{{id}}";
+        public const string GET_ALL = $"{API_ROOT}/match";
+        public const string GET_BY_ID = $"{API_ROOT}/match/{{id}}";
     }
 
     public static class Lobby

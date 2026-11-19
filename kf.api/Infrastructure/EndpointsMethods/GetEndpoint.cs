@@ -16,8 +16,7 @@ public abstract class GetEndpoint(string uriPattern) : ApiMethod(uriPattern), IN
     public override void MapEndpoint(WebApplication app)
     {
         if (string.IsNullOrEmpty(UriPattern)) throw new ArgumentNullException(nameof(UriPattern));
-        app.MapGet(UriPattern, Handler)
-            .WithGroupName("GetEndpoints");
+        app.MapGet(UriPattern, Handler);
     }
 
     public abstract Task<IResult> Handler();

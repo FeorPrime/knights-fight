@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.JsonWebTokens;
 
-namespace KnightFight.Api.Features.Challenger;
+namespace KnightFight.Api.Features.Challenger.Avatar;
 
 /// <summary>
 /// Accepts a challenger's avatar image and stores it.
@@ -37,6 +37,9 @@ public class ChallengerAvatarUpload(
 
     [Authorize]
     [RequestSizeLimit(MaxUploadBytes)]
+    [Tags("Challenger/Avatar")]
+    [EndpointSummary("Uploads new avatar for specified challenger")]
+    [EndpointDescription("Uploads new avatar for specified challenger")]
     public async Task<IResult> Handler(long id, HttpContext http, IFormFile? avatar)
     {
         var callerId = GetChallengerId(http.User);

@@ -35,11 +35,12 @@ public abstract class StreamEndpoint<TEvent>(string uriPattern) : ApiMethod(uriP
     protected abstract IAsyncEnumerable<TEvent> ReadEvents(CancellationToken cancellationToken);
 
     public override void MapEndpoint(WebApplication app)
-        => app.MapGet(UriPattern, async (HttpContext context) => await Stream(context, context.RequestAborted))
-            .WithGroupName("StreamEndpoints");
+        => app.MapGet(UriPattern, Stream);
 
-    public async Task Stream(HttpContext context, CancellationToken cancellationToken)
+    public virtual async Task Stream(IHttpContextAccessor contextAccessor, CancellationToken cancellationToken)
     {
+        var context = contextAccessor.HttpContext!;
+
         context.Response.StatusCode = StatusCodes.Status200OK;
         context.Response.ContentType = "text/event-stream";
         context.Response.Headers["Cache-Control"] = "no-cache";
@@ -66,4 +67,5 @@ public abstract class StreamEndpoint<TEvent>(string uriPattern) : ApiMethod(uriP
             // the client went away - nothing to report
         }
     }
+            
 }

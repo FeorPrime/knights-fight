@@ -5,6 +5,7 @@ using KnightFight.Api.Infrastructure.Services;
 using KnightFight.Api.Infrastructure.Services.Crypto;
 using KnightFight.Api.Models.Requests;
 using KnightFight.Api.Models.Responses;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace KnightFight.Api.Features.Auth;
@@ -41,6 +42,14 @@ public class AuthGetTokens(IAuthService authService, IOtpService otpService, IOt
         return ExceptResult<AuthTokenResponse>.Success(result);
     }
 
+    [Tags("Auth")]
+    [EndpointSummary("provides JWT and OTP tokens for challenger")]
+    [EndpointDescription("provides JWT and OTP tokens for challenger")]
+    public override async Task<IResult> Handler([FromBody] EncryptedRequest data)
+    {
+        return await base.Handler(data);
+    }
+    
     protected override async Task<IResult> Handle(AuthTokenRequest request, string? openPayload)
     {
         await using var kfc = await factory.CreateDbContextAsync();

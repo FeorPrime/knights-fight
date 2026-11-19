@@ -7,6 +7,10 @@ namespace KnightFight.Api.Features.Matches;
 
 public class MatchesGetAll(IGameManager gameManager) : GetEndpoint(ApiMap.Match.GET_ALL)
 {
+    
+    [Tags("Match")]
+    [EndpointSummary("Get Matches data")]
+    [EndpointDescription("Provides all matches")]
     public override Task<IResult> Handler()
     {
         var matches = gameManager.GetAllGames()

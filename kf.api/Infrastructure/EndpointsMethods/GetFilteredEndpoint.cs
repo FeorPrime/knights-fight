@@ -18,8 +18,7 @@ public abstract class GetFilteredEndpoint<TFilter>(string uriPattern) : ApiMetho
 {
     public override void MapEndpoint(WebApplication app)
     {
-        app.MapGet(UriPattern, Handler)
-            .WithGroupName("GetEndpoints");;
+        app.MapGet(UriPattern, Handler);
     }
 
     public abstract Task<IResult> Handler(TFilter request);
