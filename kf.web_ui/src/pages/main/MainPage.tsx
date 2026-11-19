@@ -11,6 +11,16 @@ export function MainPage() {
             {activeView === 'leaderboard' && <LeaderboardWidget />}
             {activeView === 'matches' && <CurrentMatchesWidget />}
             {activeView === 'lobby' && <LobbyWidget />}
+            {activeView === 'docs' && (
+                <section className="bg-white rounded-xl border border-slate-200 shadow-sm p-6">
+                    <h2 className="text-lg font-semibold text-slate-900">API Documentation</h2>
+                    <p className="text-sm text-slate-500 mt-1">Choose a documentation interface.</p>
+                    <div className="flex flex-wrap gap-4 mt-4">
+                        <a className="text-sm font-medium text-blue-700 hover:underline" href="/api/swagger">Swagger</a>
+                        <a className="text-sm font-medium text-blue-700 hover:underline" href="/api/scalar">Scalar</a>
+                    </div>
+                </section>
+            )}
         </main>
     );
 }

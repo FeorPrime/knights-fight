@@ -9,7 +9,7 @@ import ky from 'ky';
  * empty and every request stays same-origin.
  */
 export const API_ORIGIN =
-    import.meta.env.DEV ? `http://${window.location.hostname}:8080` : '';
+    import.meta.env.DEV ? `http://${window.location.hostname}:5000` : '';
 
 export const apiClient = ky.create({
     // ky 2.x renamed `prefixUrl` to `prefix`.

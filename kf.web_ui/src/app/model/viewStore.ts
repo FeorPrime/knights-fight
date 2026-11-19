@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 
-export type ViewKey = 'leaderboard' | 'matches' | 'lobby';
+export type ViewKey = 'leaderboard' | 'matches' | 'lobby' | 'docs';
 
 type ViewStore = {
     activeView: ViewKey;
@@ -16,4 +16,5 @@ export const VIEW_LABELS: Record<ViewKey, string> = {
     leaderboard: 'Leaderboard',
     matches: 'Current Matches',
     lobby: 'Lobby',
+    docs: 'API Documentation',
 };

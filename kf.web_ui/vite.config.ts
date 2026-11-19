@@ -10,10 +10,10 @@ export default defineConfig({
     alias: { '@': `${import.meta.dirname}/src` },
   },
   server: {
-    // The HTTP API listens on 8080. Port 5050 is the planned UDP game protocol.
+    // The development HTTP API listens on port 5000.
     proxy: {
       '/api': {
-        target: 'http://localhost:8080',
+        target: 'http://localhost:5000',
         changeOrigin: true,
         // Server-Sent Events must not be buffered by the dev proxy.
         configure: (proxy) => {

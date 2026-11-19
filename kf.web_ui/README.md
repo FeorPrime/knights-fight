@@ -11,7 +11,7 @@ React 19 · Vite 8 · TypeScript 7 · Tailwind 4 · Zustand · TanStack Query ·
 ## Prerequisites
 
 - [Bun](https://bun.sh) 1.3+ — the project uses Bun as its package manager and script runner
-- The KnightFight API running locally on port 8080 (see the root `readme.md`)
+- The KnightFight API running locally on port 5000 (see the root `readme.md`)
 
 ## Commands
 
@@ -34,10 +34,11 @@ The image is a two-stage build: Bun compiles the app, nginx serves the static ou
 ```bash
 cd kf.web_ui
 docker build -t kf.web_ui:latest .
-docker run --rm -p 8081:80 kf.web_ui:latest
+docker run --rm --network <api-network> -p 8081:80 kf.web_ui:latest
 ```
 
 Then open <http://localhost:8081>.
+The network must provide the API container under the hostname `kf-api`, listening on port 8080.
 
 | Stage | Base image | What it does |
 |---|---|---|
@@ -47,6 +48,7 @@ Then open <http://localhost:8081>.
 `nginx.conf` (in this folder) configures the runtime stage:
 
 - `/assets/*` — content-hashed bundles, cached for a year and marked immutable
+- `/api/*` — proxied to `kf-api:8080`, including documentation and streaming endpoints
 - `/` — SPA fallback: any unknown path serves `index.html` so deep links work
 - `/index.html` — never cached, so clients always pick up a new shell
 
@@ -78,7 +80,7 @@ src/
 └── main.tsx              # entry point — mounts src/app/App.tsx
 ```
 
-`src/app/model/viewStore.ts` holds the active view (`leaderboard` | `matches` | `lobby`) in a Zustand store; `AppHeader` renders the tab bar from it and `MainPage` switches on it.
+`src/app/model/viewStore.ts` holds the active view (`leaderboard` | `matches` | `lobby` | `docs`) in a Zustand store; `AppHeader` renders the tab bar from it and `MainPage` switches on it. The documentation view links to `/api/swagger` and `/api/scalar`.
 
 Tests sit next to the code they cover (`*.test.ts`) and run under Vitest with the `jsdom` environment.
 
@@ -102,9 +104,9 @@ The **ranking is owned by the API**, not the client: `LeaderboardGet` scores 3 p
 
 ### Server-Sent Events and the dev proxy
 
-The Vite dev proxy **buffers streaming responses**, so an `EventSource` pointed at `/api/...` never receives frames in development. `API_ORIGIN` in `src/shared/api/client.ts` therefore points the stream straight at the API (`http://<host>:8080`) when `import.meta.env.DEV` is true, and is empty in production, where the SPA and the API share an origin behind nginx.
+The Vite dev proxy **buffers streaming responses**, so an `EventSource` pointed at `/api/...` never receives frames in development. `API_ORIGIN` in `src/shared/api/client.ts` therefore points the stream straight at the API (`http://<host>:5000`) when `import.meta.env.DEV` is true, and is empty in production, where the SPA and the API share an origin behind nginx. Other development API requests are proxied by Vite to `localhost:5000`.
 
-nginx also needs `proxy_buffering off;` on the `/api/` location (already set in `compose-modules/nginx/configs/*.template`) or it will buffer the stream the same way.
+The UI container's nginx disables buffering on `/api` so it does not buffer the stream. Any upstream reverse proxy must also disable buffering for streaming endpoints.
 
 The newcomers panel polls every 5 seconds as a fallback, so a dead stream degrades to polling rather than an empty panel.
 

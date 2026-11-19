@@ -17,5 +17,6 @@ describe('viewStore', () => {
         expect(keys).toContain('leaderboard');
         expect(keys).toContain('matches');
         expect(keys).toContain('lobby');
+        expect(keys).toContain('docs');
     });
 });
